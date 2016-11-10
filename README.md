@@ -1,0 +1,2 @@
+# INIsword
+read ini file    
