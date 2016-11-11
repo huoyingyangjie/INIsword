@@ -98,7 +98,9 @@ int INIsword::readlines(){
 void INIsword::parse_ini(){
     //trim
     vector<string *>::iterator iter;
-    Section * current_sc=NULL;
+    Section current_sc;
+    current_sc.type=INI_GLOBAL;
+    current_sc.section="";
     for(iter=lines.begin();iter!=lines.end();iter++)
     {
         string &current_line=trim((**iter));
@@ -111,36 +113,30 @@ void INIsword::parse_ini(){
         //section
         if((**iter)[0]=='[' && (**iter)[(**iter).size()-1]==']'){
 
-            current_sc=new Section();
-            current_sc->type=INI_LOCAL;
+            current_sc.type=INI_LOCAL;
             if(current_line.size()>2) {
-                current_sc->section = (**iter).substr(1, (**iter).size() - 2);
-                current_sc->section = trim(current_sc->section);
+                current_sc.section = (**iter).substr(1, (**iter).size() - 2);
+                current_sc.section = trim(current_sc.section);
             }
             else
-                current_sc->section="";
-            m_sc.push_back(*current_sc);
+                current_sc.section="";
+            m_sc.push_back(current_sc);
             continue;
 
         }
-        //global key=name
-        if(current_sc==NULL)
-        {
 
-            current_sc=new Section();
-            current_sc->type=INI_GLOBAL;
-            m_sc.push_back(*current_sc);
-
-        }
-
+        if(current_sc.type==INI_GLOBAL)
+            m_sc.push_back(current_sc);
 
         //key=name
         vector<string> tokens=split(current_line,'=');
-        KeyValue * kv= new KeyValue();
-        kv->key=tokens[0];
-        kv->value=tokens[1];
+        KeyValue kv= {
+                .key=tokens[0],
+                .value=tokens[1]
+        };
 
-        m_sc[m_sc.size()-1].kv.push_back(*kv);
+
+        m_sc[m_sc.size()-1].kv.push_back(kv);
 
     }
 
