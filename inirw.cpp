@@ -105,7 +105,7 @@ void INIsword::parse_ini(){
     {
         string &current_line=trim((**iter));
 
-        if(current_line.empty())
+        if(current_line.empty() || current_line[0]=='#')
             continue;
 
 
