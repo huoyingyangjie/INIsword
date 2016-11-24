@@ -55,7 +55,12 @@ void INIsword::release(){
     vector<string *>::iterator iter;
     for(iter=lines.begin();iter!=lines.end();iter++)
     {
-       delete *iter;
+      
+        if(*iter!=NULL)
+            delete *iter;
+        else
+            continue;
+        *iter=NULL;
     }
 
 }
